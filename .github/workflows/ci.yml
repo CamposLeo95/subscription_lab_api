@@ -24,5 +24,8 @@ jobs:
 
       - name: Biome Check
         run: npx biome check .
+      
+      - name: Run Tests
+        run: npm test
 
       
