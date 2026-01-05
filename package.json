@@ -1,0 +1,28 @@
+{
+  "name": "subscription_lab_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+		"build": "npx tsc",
+    "start": "node dist/server.js",
+		"dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+	},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CamposLeo95/subscription_lab_api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CamposLeo95/subscription_lab_api/issues"
+  },
+  "homepage": "https://github.com/CamposLeo95/subscription_lab_api#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
