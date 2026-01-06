@@ -1,14 +1,18 @@
-import { errorHandler } from "./errors/errorHandler.js";
-import { createApp } from "./main.js";
-import { registerRoutes } from "./routes/routes.js";
+import { errorHandler } from "./errors/errorHandler";
+import { createApp } from "./main";
+import { registerRoutes } from "./routes/routes";
 
-async function startServer() {
+const PORT = 3000;
+
+export async function buildApp(port: number = PORT) {
 	const app = createApp();
 
 	await registerRoutes(app);
-	await app.setErrorHandler(errorHandler);
+	app.setErrorHandler(errorHandler);
 
-	await app.listen({ port: 3000, host: "127.0.0.1" });
+	app.listen({ port, host: "127.0.0.1" });
+
+	return app;
 }
 
-startServer();
+buildApp(PORT);

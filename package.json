@@ -23,7 +23,7 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"type": "module",
+	"type": "commonjs",
 	"bugs": {
 		"url": "https://github.com/CamposLeo95/subscription_lab_api/issues"
 	},

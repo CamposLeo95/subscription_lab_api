@@ -1,6 +1,5 @@
-describe("Testing Jest", () => {
-	test("Test is running!", () => {
-		const msg = "hello world";
-		expect(msg).toMatch("hell");
+describe("App", () => {
+	test("Test app is running", async () => {
+		expect(true).toBe(true);
 	});
 });

@@ -1,4 +1,6 @@
-import { createDefaultPreset } from "ts-jest";
+// import { createDefaultPreset } from "ts-jest";
+
+const { createDefaultPreset } = require("ts-jest");
 
 /** @type {import('jest').Config} */
 const config = {
@@ -9,4 +11,4 @@ const config = {
 	testMatch: ["**/*.spec.ts", "**/*.test.ts"],
 };
 
-export default config;
+module.exports = config;

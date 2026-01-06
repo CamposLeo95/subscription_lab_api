@@ -1,5 +1,5 @@
-import type { UserResponseDTO } from "../../../dtos/users/users.dto.js";
-import type { UserRepositoryInterface } from "../../../repositories/users/user.repository.js";
+import type { UserResponseDTO } from "../../../dtos/users/users.dto";
+import type { UserRepositoryInterface } from "../../../repositories/users/user.repository";
 
 const fakeDB: UserResponseDTO[] = [
 	{

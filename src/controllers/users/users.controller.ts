@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { StatusCodes } from "http-status-codes";
-import type { UserService } from "../../services/users/user.service.js";
+import type { UserService } from "../../services/users/user.service";
 
 export class UserController {
 	constructor(private userService: UserService) {}
