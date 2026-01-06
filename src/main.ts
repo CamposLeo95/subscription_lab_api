@@ -1,9 +1,11 @@
 import Fastify from "fastify";
 
-const app = Fastify();
-
-app.get("/", async () => {
-	return { message: "Hello, World!" };
-});
-
-export { app };
+export function createApp() {
+	return Fastify({
+		logger: {
+			transport: {
+				target: "pino-pretty",
+			},
+		},
+	});
+}

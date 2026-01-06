@@ -1,12 +1,14 @@
-import { app } from "./main.js";
+import { errorHandler } from "./errors/errorHandler.js";
+import { createApp } from "./main.js";
+import { registerRoutes } from "./routes/routes.js";
 
-const portNumber: number = 3000;
-const PORT: number = Number(process.env.PORT) || portNumber;
+async function startServer() {
+	const app = createApp();
 
-app.listen({ port: PORT }, (err) => {
-	console.log(`Server listening at ${PORT}`);
-	if (err) {
-		console.error(err);
-		process.exit(1);
-	}
-});
+	await registerRoutes(app);
+	await app.setErrorHandler(errorHandler);
+
+	await app.listen({ port: 3000, host: "127.0.0.1" });
+}
+
+startServer();
