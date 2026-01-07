@@ -1,9 +1,14 @@
 import createError from "@fastify/error";
+import { StatusCodes } from "http-status-codes";
 
-const numberNotFound = 404;
-
-export const notFoundUsersError = createError(
+export const userNotFoundError = createError(
 	"NOT_FOUND_USERS",
-	"Users not found",
-	numberNotFound,
+	"User(s) not found",
+	StatusCodes.NOT_FOUND,
+);
+
+export const InvalidInputError = createError(
+	"INVALID_INPUT",
+	"Invalid input data",
+	StatusCodes.BAD_REQUEST,
 );
