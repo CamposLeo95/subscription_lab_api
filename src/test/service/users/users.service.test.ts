@@ -1,4 +1,3 @@
-import { CreateUserRequestDTO } from "../../../dtos/users/users.dto";
 import { UserService } from "../../../services/users/user.service";
 import { UserRepositoryInMemory } from "../../repositories/user/user.repositoryInMemory";
 
@@ -6,7 +5,6 @@ const repositoryInMemory = new UserRepositoryInMemory();
 const userService = new UserService(repositoryInMemory);
 describe("UserService", () => {
 	beforeEach(() => {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		(repositoryInMemory as any).users = [];
 	});
 
@@ -35,7 +33,6 @@ describe("UserService", () => {
 			];
 
 			for (const data of requestData) {
-				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 				await expect(userService.create(data as any)).rejects.toThrow();
 			}
 		});

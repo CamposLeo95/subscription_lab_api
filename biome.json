@@ -17,7 +17,6 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noExplicitAny": "error",
 				"noVar": "error"
 			},
 			"style": {
