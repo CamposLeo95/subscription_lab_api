@@ -14,4 +14,20 @@ describe("/Users", () => {
 			expect(user).toHaveProperty("id");
 		}
 	});
+
+	it("should return statusCode 201 and id property when creating a user", async () => {
+		const appInstance = await buildApp(PORT);
+		await appInstance.ready();
+
+		const requestData = {
+			name: "Jane Doe",
+			email: "jane.doe@example.com",
+		};
+
+		const response = await request(appInstance.server)
+			.post("/users")
+			.send(requestData);
+		expect(response.status).toBe(StatusCodes.CREATED);
+		expect(response.body).toHaveProperty("id");
+	});
 });

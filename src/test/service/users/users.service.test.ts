@@ -1,11 +1,15 @@
 import { UserService } from "../../../services/users/user.service";
-import { UserRepositoryInMemory } from "../../repositories/user/user.repositoryInMemory";
+import {
+	clearUsers,
+	UserRepositoryInMemory,
+} from "../../repositories/user/user.repositoryInMemory";
 
 const repositoryInMemory = new UserRepositoryInMemory();
 const userService = new UserService(repositoryInMemory);
+
 describe("UserService", () => {
 	beforeEach(() => {
-		(repositoryInMemory as any).users = [];
+		clearUsers();
 	});
 
 	describe("getAllUsers", () => {
@@ -22,6 +26,8 @@ describe("UserService", () => {
 				email: "john@gmail.com",
 			};
 			const newUser = await userService.create(requestData);
+			const users = await userService.getAllUsers();
+			expect(users).toHaveLength(1);
 			expect(newUser).toHaveProperty("id");
 		});
 
@@ -35,6 +41,22 @@ describe("UserService", () => {
 			for (const data of requestData) {
 				await expect(userService.create(data as any)).rejects.toThrow();
 			}
+		});
+	});
+
+	describe("delete", () => {
+		it("should delete a user", async () => {
+			const requestData = {
+				name: "John Doe",
+				email: "john@gmail.com",
+			};
+			const newUser = await userService.create(requestData);
+			const users = await userService.getAllUsers();
+			expect(users).toHaveLength(1);
+
+			await userService.delete(newUser.id);
+			const usersAfterDelete = await userService.getAllUsers();
+			expect(usersAfterDelete).toHaveLength(0);
 		});
 	});
 });

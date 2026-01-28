@@ -2,9 +2,9 @@ import type {
 	CreateUserRequestDTO,
 	CreateuserResponseDTO,
 	UserResponseDTO,
-} from "../../../dtos/users/users.dto";
-import { User } from "../../../entities/user.entity";
-import type { UserRepositoryInterface } from "../../../repositories/users/user.repository";
+} from "../../../../dtos/users/users.dto";
+import { User } from "../../../../entities/user.entity";
+import type { UserRepositoryInterface } from "../../../../repositories/users/user.repository";
 
 const fakeDB: UserResponseDTO[] = [
 	{
@@ -30,5 +30,13 @@ export class UserRepository implements UserRepositoryInterface {
 			createdAt: newUser.getCreatedAt().toISOString(),
 		});
 		return { id: newUser.getId() };
+	}
+
+	async delete(id: number): Promise<void> {
+		const index = fakeDB.findIndex((user) => user.id === id);
+		if (index !== -1) {
+			fakeDB.splice(index, 1);
+		}
+		return;
 	}
 }

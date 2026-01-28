@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { UserController } from "../../controllers/users/users.controller";
-import { UserRepository } from "../../database/repositories/users/user.repository";
+import { UserRepository } from "../../database/dbInMemory/repositories/users/user.repository";
 import { UserService } from "../../services/users/user.service";
 
 const repository = new UserRepository();
