@@ -6,11 +6,23 @@ import type {
 import { User } from "../../../entities/user.entity";
 import type { UserRepositoryInterface } from "../../../repositories/users/user.repository";
 
-const users: UserResponseDTO[] = [];
+const users: UserResponseDTO[] = [
+	{
+		id: 1,
+		name: "John Doe",
+		email: "john.doe@example.com",
+		createdAt: "2024-01-01T00:00:00Z",
+	},
+];
 
 export class UserRepositoryInMemory implements UserRepositoryInterface {
 	async findAll(): Promise<UserResponseDTO[]> {
 		return users;
+	}
+
+	async findById(id: number): Promise<UserResponseDTO | null> {
+		const user = users.find((user) => user.id === id);
+		return user || null;
 	}
 
 	async create(data: CreateUserRequestDTO): Promise<CreateuserResponseDTO> {

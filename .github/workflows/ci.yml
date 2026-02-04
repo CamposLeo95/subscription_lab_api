@@ -1,31 +1,101 @@
+
+# Nome do workflow
 name : CI
 
+# Ações para em que esse CI será executado
 on:
   pull_request: 
   push:
     branches: [main]
 
 jobs: 
+  # Job que garante qualidade 
   quality: 
+    # Ambiente onde o job será executado
     runs-on: ubuntu-latest
 
+    # Passos do job
     steps:
+      # Clona seu repositório dentro da VM do GitHub Actions
       - name: Checkout
         uses: actions/checkout@v3
 
+        # Instala e configura o Node.js na versão 20
+        # Garante a versao correta do Node.js para rodar o projeto
+        # Utiliza cache para as dependências do npm
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '20'
           cache: 'npm'
       
+      # Instala as dependências do projeto
+      # CI é mais rápido e garante que o package-lock.json está em sincronia com o package.json
       - name: Install Dependences
         run: npm ci
-
+      
+      # Roda o Biome para checar a qualidade do código
       - name: Biome Check
         run: npx biome check .
       
+      # Roda os testes do projeto
       - name: Run Tests
         run: npm test
+  
+  # Job que constrói a imagem Docker
+  docker-build:
+    # Ambiente onde o job será executado
+    runs-on: ubuntu-latest
+    # Job depende do job de qualidade
+    needs: quality
+
+    # Passos do job
+    steps:
+      # Clona seu repositório dentro da VM do GitHub Actions (cada job é independente)
+      - name: Checkout 
+      # Clona o repositório para que o Dockerfile e o código fonte estejam disponíveis
+        uses: actions/checkout@v3
+
+      # Constrói a imagem Docker com a tag baseada no SHA do commit
+      - name: Build Docker Image
+        run: docker build -t api_lab:${{github.sha}} .
+
+  # Job que publica a imagem Docker no Docker Hub
+  docker-push:
+    # Ambiente onde o job será executado
+    runs-on: ubuntu-latest
+    # Job depende do job de construção da imagem Docker
+    needs: docker-build
+
+    steps:
+      # Clona seu repositório dentro da VM do GitHub Actions (cada job é independente)
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials
+      # Loga no Docker Hub utilizando segredos armazenados no repositório
+        uses: aws-actions/configure-aws-credentials@v3
+        # Configura as credenciais da AWS usando segredos armazenados no repositório
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+        # Utiliza a ação oficial da AWS para logar no Amazon ECR
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        # Loga no Amazon ECR usando as credenciais configuradas anteriormente
+      - name: Build, tag and push image
+        # Constrói, marca e publica a imagem Docker no Amazon ECR
+        run: |
+          IMAGE_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
+   
+          docker build -t api_lab .
+          docker tag api_lab:latest $IMAGE_URI:${{ github.sha }}
+          docker tag api_lab:latest $IMAGE_URI:latest
+
+          docker push $IMAGE_URI:${{ github.sha }}
+          docker push $IMAGE_URI:latest
+
+
+
+
 
       
