@@ -6,12 +6,9 @@ const PORT = 3000;
 
 export async function buildApp(port: number = PORT) {
 	const app = createApp();
-
 	await registerRoutes(app);
 	app.setErrorHandler(errorHandler);
-
 	app.listen({ port, host: "127.0.0.1" });
-
 	return app;
 }
 

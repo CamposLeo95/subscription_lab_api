@@ -9,8 +9,8 @@ import type { UserRepositoryInterface } from "../../../../repositories/users/use
 const fakeDB: UserResponseDTO[] = [
 	{
 		id: 1,
-		name: "John Doe",
-		email: "john.doe@example.com",
+		name: "Jane Jays",
+		email: "jane.jays@example.com",
 		createdAt: "2024-01-01T00:00:00Z",
 	},
 ];
@@ -18,6 +18,11 @@ const fakeDB: UserResponseDTO[] = [
 export class UserRepository implements UserRepositoryInterface {
 	async findAll(): Promise<UserResponseDTO[]> {
 		return fakeDB;
+	}
+
+	async findById(id: number): Promise<UserResponseDTO | null> {
+		const user = fakeDB.find((user) => user.id === id);
+		return user || null;
 	}
 
 	async create(data: CreateUserRequestDTO): Promise<CreateuserResponseDTO> {
@@ -39,4 +44,8 @@ export class UserRepository implements UserRepositoryInterface {
 		}
 		return;
 	}
+}
+
+export function clearUsers() {
+	fakeDB.length = 0;
 }

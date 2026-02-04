@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { StatusCodes } from "http-status-codes";
+import { AppError } from "../../errors/AppError";
 import type { UserService } from "../../services/users/user.service";
 
 export class UserController {
@@ -11,15 +12,40 @@ export class UserController {
 	}
 
 	async createUser(request: FastifyRequest, reply: FastifyReply) {
-		const { name, email } = request.body as { name: string; email: string };
-		if (!name || !email) {
+		try {
+			const { name, email } = request.body as { name: string; email: string };
+			const newUser = await this.userService.create({ name, email });
+			return reply.status(StatusCodes.CREATED).send(newUser);
+		} catch (error) {
+			if (error instanceof AppError) {
+				return reply.status(error.statusCode).send({
+					code: error.code,
+					message: error.message,
+					details: error.details,
+				});
+			}
 			return reply
-				.status(StatusCodes.BAD_REQUEST)
-				.send({ message: "Name and email are required" });
+				.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.send({ message: "Internal Server Error" });
 		}
+	}
 
-		const newUser = await this.userService.create({ name, email });
-
-		return reply.status(StatusCodes.CREATED).send(newUser);
+	async deleteUser(request: FastifyRequest, reply: FastifyReply) {
+		try {
+			const { id } = request.params as { id: string };
+			await this.userService.delete(Number(id));
+			return reply.status(StatusCodes.NO_CONTENT).send();
+		} catch (error) {
+			if (error instanceof AppError) {
+				return reply.status(error.statusCode).send({
+					code: error.code,
+					message: error.message,
+					details: error.details,
+				});
+			}
+			return reply
+				.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.send({ message: "Internal Server Error" });
+		}
 	}
 }
